@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I'm Sorry</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      text-align: center;
+      color: white;
+      transition: background 2s ease-in-out;
+    }
+    body.theme-changed {
+      background: linear-gradient(135deg, #9be15d, #00e3ae);
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 1s ease-in-out;
+      z-index: 2;
+      transition: opacity 1s ease-in-out;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+    .buttonContainer {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s, left 0.3s, top 0.3s;
+    }
+    .yes {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .yes:hover {
+      background-color: #45a049;
+    }
+    /* Initially, the "No" button is static so it sits next to the "Yes" button */
+    .no {
+      background-color: #ff4b5c;
+      color: white;
+      position: static;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Confetti styles */
+    .confetti {
+      position: fixed;
+      font-size: 2rem;
+      pointer-events: none;
+      animation: confettiFall 3s linear forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-100vh) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    /* Floating hearts background remains */
+    .heart {
+      position: fixed;
+      bottom: -50px;
+      animation-name: floatUp;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: 1;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="apologyContainer">
+    <h1>I'm Sorry 💖</h1>
+    <p>Will you forgive me? 🥺</p>
+    <div class="buttonContainer">
+      <button class="btn yes" id="yesBtn" onclick="onYesPressed()">Yes</button>
+      <button class="btn no" id="noBtn" 
+              onmouseover="moveNoButton()" 
+              ontouchstart="moveNoButton()" 
+              onclick="moveNoButton()">No</button>
+    </div>
+  </div>
+  
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const container = document.getElementById("apologyContainer");
+
+    function moveNoButton() {
+      // On first interaction, switch its position to absolute so it can roam
+      if (noBtn.style.position !== "absolute") {
+        noBtn.style.position = "absolute";
+      }
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+      const maxX = window.innerWidth - btnWidth;
+      const maxY = window.innerHeight - btnHeight;
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
+    }
+
+    function onYesPressed() {
+      // Change theme slowly by adding a class to body
+      document.body.classList.add("theme-changed");
+      // Hide the "No" button
+      noBtn.style.display = "none";
+      // Update container content with a thank-you message
+      container.innerHTML = "<h1>Thank you! Ab Call Kr le! 🎉</h1>";
+      // Trigger confetti effect
+      createConfetti();
+    }
+
+    // Generate floating hearts in the background (same as before)
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * 100 + "%";
+      heart.style.animationDuration = 3 + Math.random() * 2 + "s";
+      heart.style.fontSize = 16 + Math.random() * 20 + "px";
+      heart.textContent = "❤️";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), parseFloat(heart.style.animationDuration) * 1000);
+    }
+    setInterval(createHeart, 500);
+
+    // Create confetti effect when Yes is pressed
+    function createConfetti() {
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * 100 + "%";
+        confetti.style.animationDuration = 3 + Math.random() * 2 + "s";
+        confetti.textContent = "🎉";
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+  </script>
+</body>
+</html>
